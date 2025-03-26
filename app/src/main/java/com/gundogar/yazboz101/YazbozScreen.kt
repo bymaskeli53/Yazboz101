@@ -3,7 +3,7 @@ package com.gundogar.yazboz101
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,21 +22,23 @@ import androidx.compose.ui.unit.sp
 fun YazbozScreen(modifier: Modifier = Modifier) {
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by remember { mutableStateOf(false) }
-
     var showScoreDialog by remember { mutableStateOf(false) }
     var showPenaltyDialog by remember { mutableStateOf(false) }
+
+    val scores = remember { mutableStateListOf(mutableStateListOf(0, 0, 0, 0)) }
 
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { isSheetOpen = true },
-                ) {
+            ) {
                 Icon(Icons.Filled.Add, contentDescription = null)
             }
         }
     ) { paddingValues ->
         YazbozScreenContent(
-            modifier = modifier.padding(paddingValues)
+            modifier = modifier.padding(paddingValues),
+            scores = scores
         )
     }
 
@@ -51,7 +54,6 @@ fun YazbozScreen(modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(onClick = {
-                    // Skor ekleme işlemi burada yapılabilir
                     showScoreDialog = true
                     isSheetOpen = false
                 }) {
@@ -61,7 +63,6 @@ fun YazbozScreen(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
-                    // Ceza ekleme işlemi burada yapılabilir
                     showPenaltyDialog = true
                     isSheetOpen = false
                 }) {
@@ -75,7 +76,9 @@ fun YazbozScreen(modifier: Modifier = Modifier) {
         ScorePenaltyDialog(
             title = "Skor Ekle",
             onDismiss = { showScoreDialog = false },
-            onConfirm = { /* Burada skoru ekleyebilirsin */ }
+            onConfirm = { newScores ->
+                scores.add(newScores.toMutableStateList())
+            }
         )
     }
 
@@ -83,15 +86,15 @@ fun YazbozScreen(modifier: Modifier = Modifier) {
         ScorePenaltyDialog(
             title = "Ceza Ekle",
             onDismiss = { showPenaltyDialog = false },
-            onConfirm = { /* Burada cezayı ekleyebilirsin */ }
+            onConfirm = { penalties ->
+                scores.add(penalties.map { -it }.toMutableStateList())
+            }
         )
     }
 }
 
 @Composable
-fun YazbozScreenContent(modifier: Modifier = Modifier) {
-    val scoresList = listOf(50, 100, 35, 40) // Örnek skor listesi
-
+fun YazbozScreenContent(modifier: Modifier = Modifier, scores: List<List<Int>>) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -111,37 +114,31 @@ fun YazbozScreenContent(modifier: Modifier = Modifier) {
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            repeat(4) { // 4 sütun için döngü
+            repeat(4) { playerIndex ->
                 Column(
                     modifier = Modifier
                         .weight(0.25f)
                         .fillMaxHeight()
                 ) {
                     LazyColumn(modifier = Modifier.weight(1f)) {
-                        items(scoresList) { score ->
+                        items(scores) { round ->
                             Text(
-                                text = score.toString(),
+                                text = round[playerIndex].toString(),
                                 fontSize = 18.sp,
                                 modifier = Modifier.padding(4.dp)
                             )
                         }
                     }
                     Text(
-                        text = "Toplam: ${scoresList.sum()}",
+                        text = "Toplam: ${scores.sumOf { it[playerIndex] }}",
                         fontSize = 18.sp,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
-                if (it < 3) VerticalDivider()
+                if (playerIndex < 3) VerticalDivider()
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun YazbozScreenPreview() {
-    YazbozScreen()
 }
 
 @Composable
@@ -160,8 +157,10 @@ fun ScorePenaltyDialog(
                 inputValues.forEachIndexed { index, value ->
                     OutlinedTextField(
                         value = value,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         onValueChange = { newValue ->
-                            inputValues = inputValues.toMutableList().also { it[index] = newValue }
+                            val filteredText = newValue.text.filter { it.isDigit() } // Sadece rakamları al
+                            inputValues = inputValues.toMutableList().also { it[index] = newValue.copy(text = filteredText) }
                         },
                         label = { Text("Oyuncu ${index + 1}") },
                         modifier = Modifier
@@ -186,4 +185,11 @@ fun ScorePenaltyDialog(
             }
         }
     )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun YazbozScreenPreview() {
+    YazbozScreen()
 }
