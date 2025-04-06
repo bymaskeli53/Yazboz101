@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.gundogar.yazboz101.ui.theme.Yazboz101Theme
 
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Yazboz101Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                  YazbozScreen(modifier = Modifier.padding(innerPadding))
+                  YazbozScreen(modifier = Modifier.padding(innerPadding),context = LocalContext.current)
                 }
             }
         }
