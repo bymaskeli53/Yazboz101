@@ -50,7 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.platform.LocalContext
 
 
 import androidx.compose.ui.text.font.FontStyle
@@ -65,7 +65,8 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun YazbozScreen(modifier: Modifier = Modifier,context: Context) {
+fun YazbozScreen(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by remember { mutableStateOf(false) }
     var showScoreDialog by remember { mutableStateOf(false) }
@@ -78,7 +79,7 @@ fun YazbozScreen(modifier: Modifier = Modifier,context: Context) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+
         ) {
             YazbozScreenContent(
                 modifier = Modifier.fillMaxSize(),
