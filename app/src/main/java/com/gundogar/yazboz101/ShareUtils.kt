@@ -15,13 +15,13 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 fun shareImageWithText(context: Context) {
-    val bitmap = createImageWithText("Babalar Ezdi")
+    val bitmap = createImageWithText("Kolay maçtı")
     val uri = saveImageToCache(context, bitmap) ?: return
 
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "image/png"
         putExtra(Intent.EXTRA_STREAM, uri)
-        putExtra(Intent.EXTRA_TEXT, "Babalar Ezdi! 🎉")
+        putExtra(Intent.EXTRA_TEXT, "Kolay maçtı!!!")
         setPackage("com.whatsapp") // Sadece WhatsApp'a yönlendirir
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }

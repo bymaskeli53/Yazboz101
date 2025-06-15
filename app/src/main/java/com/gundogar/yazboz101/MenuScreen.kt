@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -79,32 +80,27 @@ fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Üst kısımda görsel
         Image(
-            painter = painterResource(id = R.drawable.ic_yazboz_title), // drawable'dan
+            painter = painterResource(id = R.drawable.ic_main_yazboz),
             contentDescription = "Oyun Logosu",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp) // İstediğiniz yükseklik
-                .padding(48.dp),
+                .height(220.dp)
+                .padding(16.dp),
             contentScale = ContentScale.Fit
         )
 
-        // Boşluk bırakmak için Spacer
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
 
-        // Butonlar ortalanmış şekilde
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Button(onClick = { showDialog = true }) {
-                Text(text = "Yeni Oyun")
-            }
 
-            Button(onClick = { /* TODO: Önceki oyunlar */ }) {
-                Text(text = "Önceki Oyunlarım")
-            }
+            MenuButton(text = "Yeni Oyun") { showDialog = true }
+
+
+            MenuButton(text = "Önceki Oyunlarım")  { }
         }
 
         Spacer(modifier = Modifier.weight(1f))
