@@ -19,12 +19,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -80,15 +84,14 @@ fun YazbozScreen(
                 s4 = s4
             )
 
-            ExtendedFloatingActionButton(
+            FloatingActionButton(
                 onClick = { viewModel.onEvent(YazbozUiEvent.OpenSheet) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .width(72.dp)
-                    .height(72.dp)
-                    .padding(8.dp)
+                    .padding(8.dp),
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Ekle")
+                Icon(Icons.Outlined.Add, contentDescription = "Ekle")
             }
 
             Icon(
