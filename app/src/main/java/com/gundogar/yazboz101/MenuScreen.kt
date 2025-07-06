@@ -85,8 +85,8 @@ fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit) {
             contentDescription = "Oyun Logosu",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
-                .padding(16.dp),
+                .height(280.dp)
+                .padding(48.dp),
             contentScale = ContentScale.Fit
         )
 
