@@ -8,6 +8,6 @@ sealed class Screen {
     object MenuScreen : Screen()
 
     @Serializable
-    data class YazbozScreen(val oyuncu1: String,val oyuncu2: String,val oyuncu3: String,val oyuncu4: String) : Screen()
+    data class YazbozScreen(val player: Player) : Screen()
 
 }

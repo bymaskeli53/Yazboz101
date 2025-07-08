@@ -18,17 +18,20 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
         modifier = Modifier.padding(innerPadding),
         ) {
 
-        composable<Screen.MenuScreen> {
+            composable<Screen.MenuScreen> {
             MenuScreen(onNavigateToYazboz = { p1, p2, p3, p4 ->
                 // val oyuncularJson = Uri.encode(Json.encodeToString(oyuncular))
                 // navController.navigate("${Screen.YazbozScreen::class.qualifiedName}?oyuncular=$oyuncularJson")
-                navController.navigate(route = Screen.YazbozScreen(p1, p2, p3, p4))
+                navController.navigate(Screen.YazbozScreen(player = Player("Muhammet")))
             })
         }
 
-        composable<Screen.YazbozScreen> { backStackEntry ->
-            val args = backStackEntry.toRoute<Screen.YazbozScreen>()
-            YazbozScreen(s1 = args.oyuncu1, s2 = args.oyuncu2, s3 = args.oyuncu3, s4 = args.oyuncu4)
+        composable<Screen.YazbozScreen>(
+            typeMap = mapOf(typeOf<Player>() to NavigationHelpers.parcelableType<Player>())
+        ) { backStackEntry ->
+            val args = backStackEntry.toRoute<Screen.YazbozScreen>().player
+            val name = args.name
+            YazbozScreen(s1 = name,s2 = name, s3 = name, s4 = name)
         }
     }
 }

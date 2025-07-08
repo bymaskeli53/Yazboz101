@@ -216,7 +216,7 @@ fun ScorePenaltyDialog(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         onValueChange = { newValue ->
                             val filteredText =
-                                newValue.text.filter { it.isDigit() } // Sadece rakamları al
+                                newValue.text.filter { it.isDigit() }
                             inputValues = inputValues.toMutableList()
                                 .also { it[index] = newValue.copy(text = filteredText) }
                         },
