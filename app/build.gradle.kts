@@ -67,6 +67,8 @@ dependencies {
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+
 
     // Room
     implementation(libs.room.runtime)

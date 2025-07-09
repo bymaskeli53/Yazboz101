@@ -1,13 +1,32 @@
 package com.gundogar.yazboz101
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class YazbozViewModel : ViewModel() {
+@HiltViewModel
+class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewModel() {
     private val _uiState = MutableStateFlow(YazbozUiState())
     val uiState: StateFlow<YazbozUiState> = _uiState
+
+    private fun saveGame(players: List<Player>) {
+        viewModelScope.launch {
+            try {
+                dao.insertGame(YazbozItem(players = players))
+                Log.e("YazbozViewModel", "Oyun kaydedildi: $players")
+                // Gerekirse state güncellenebilir
+            } catch (e: Exception) {
+                // Hata yakalama veya snackbar gösterme eklenebilir
+                e.printStackTrace()
+            }
+        }
+         }
 
     fun onEvent(event: YazbozUiEvent) {
         when (event) {
@@ -30,6 +49,12 @@ class YazbozViewModel : ViewModel() {
                 it.copy(scores = it.scores + listOf(penalties), showPenaltyDialog = false)
             }
             YazbozUiEvent.Share -> { /* handled in View via callback */ }
+
+            is YazbozUiEvent.SaveGame -> saveGame(players = event.players)
         }
+
+
     }
 }
+
+

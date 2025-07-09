@@ -8,4 +8,6 @@ sealed class YazbozUiEvent {
     data class AddScores(val scores: List<Int>) : YazbozUiEvent()
     data class AddPenalties(val penalties: List<Int>) : YazbozUiEvent()
     object Share : YazbozUiEvent()
+    data class SaveGame(val players: List<Player>) : YazbozUiEvent()
+
 }

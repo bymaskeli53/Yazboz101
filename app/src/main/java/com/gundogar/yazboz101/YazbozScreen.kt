@@ -48,14 +48,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YazbozScreen(
-    viewModel: YazbozViewModel = viewModel(),
+    viewModel: YazbozViewModel = hiltViewModel(),
+    gameViewModel: GameViewModel = hiltViewModel(),
     s1: String,
     s2: String,
     s3: String,
@@ -100,7 +103,14 @@ fun YazbozScreen(
                     .align(Alignment.TopStart)
                     .width(60.dp)
                     .height(60.dp)
-                    .clickable { shareImageWithText(context) },
+                    .clickable {
+                        val players = listOf(
+                            Player(s1, state.scores.map { it[0] }),
+                            Player(s2, state.scores.map { it[1] }),
+                            Player(s3, state.scores.map { it[2] }),
+                            Player(s4, state.scores.map { it[3] })
+                        )
+                        viewModel.onEvent(YazbozUiEvent.SaveGame(players)) },
                 tint = androidx.compose.ui.graphics.Color.Black,
                 contentDescription = null
             )

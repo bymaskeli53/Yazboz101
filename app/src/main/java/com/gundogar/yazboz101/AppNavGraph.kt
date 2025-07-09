@@ -22,7 +22,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
             MenuScreen(onNavigateToYazboz = { p1, p2, p3, p4 ->
                 // val oyuncularJson = Uri.encode(Json.encodeToString(oyuncular))
                 // navController.navigate("${Screen.YazbozScreen::class.qualifiedName}?oyuncular=$oyuncularJson")
-                navController.navigate(Screen.YazbozScreen(player = Player("Muhammet")))
+                navController.navigate(Screen.YazbozScreen(player = Player("Muhammet", listOf(0,0,0,0))))
             })
         }
 

@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class Player(val name: String) : Parcelable
+data class Player(val name: String,val scores: List<Int>) : Parcelable
