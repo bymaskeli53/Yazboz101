@@ -10,4 +10,8 @@ sealed class Screen {
     @Serializable
     data class YazbozScreen(val player: Player) : Screen()
 
+    @Serializable
+    object PreviousGamesScreen : Screen()
+
+
 }

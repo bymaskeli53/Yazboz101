@@ -17,14 +17,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,9 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +58,7 @@ fun YazbozScreen(
     s2: String,
     s3: String,
     s4: String,
-    ) {
+) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -110,7 +105,8 @@ fun YazbozScreen(
                             Player(s3, state.scores.map { it[2] }),
                             Player(s4, state.scores.map { it[3] })
                         )
-                        viewModel.onEvent(YazbozUiEvent.SaveGame(players)) },
+                        viewModel.onEvent(YazbozUiEvent.SaveGame(players))
+                    },
                 tint = androidx.compose.ui.graphics.Color.Black,
                 contentDescription = null
             )
@@ -181,7 +177,10 @@ fun YazbozScreenContent(
                         .fillMaxHeight()
                 ) {
 
-                    Text(text = list.get(playerIndex),color = androidx.compose.ui.graphics.Color.Black)
+                    Text(
+                        text = list.get(playerIndex),
+                        color = androidx.compose.ui.graphics.Color.Black
+                    )
 
                     HorizontalDivider()
                     LazyColumn(modifier = Modifier.weight(1f)) {

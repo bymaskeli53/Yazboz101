@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit) {
+fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit, onNavigateToPreviousGames: () -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
     val isimler = remember { mutableStateListOf("", "", "", "") }
     val context = LocalContext.current
@@ -100,7 +100,9 @@ fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit) {
             MenuButton(text = "Yeni Oyun") { showDialog = true }
 
 
-            MenuButton(text = "Önceki Oyunlarım")  { }
+            MenuButton(text = "Önceki Oyunlarım")  {
+                onNavigateToPreviousGames()
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
