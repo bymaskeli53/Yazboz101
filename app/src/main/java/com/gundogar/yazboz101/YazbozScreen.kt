@@ -1,6 +1,7 @@
 package com.gundogar.yazboz101
 
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -80,6 +81,7 @@ fun YazbozScreen(
                 }
                 viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
                 navController.popBackStack()
+                Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
 
             }, modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 8.dp)) {
                 Text(text = "Oyunu bitir")
