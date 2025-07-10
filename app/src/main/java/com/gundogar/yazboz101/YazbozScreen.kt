@@ -81,7 +81,7 @@ fun YazbozScreen(
                 viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
                 navController.popBackStack()
 
-            }, modifier = Modifier.align(Alignment.TopEnd)) {
+            }, modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 8.dp)) {
                 Text(text = "Oyunu bitir")
             }
 

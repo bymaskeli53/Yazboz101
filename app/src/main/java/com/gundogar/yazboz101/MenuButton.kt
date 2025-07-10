@@ -29,7 +29,7 @@ fun MenuButton(text: String, icon: ImageVector, onClick: () -> Unit) {
             .shadow(4.dp, shape = RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF4C5B61),
+            containerColor = Color(0xFF384247),
             contentColor = Color.White
         )
     ) {

@@ -37,7 +37,7 @@ fun MenuScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFFEEEDEB), Color(0xFFD6D3CE))
+                    listOf(Color(0xFF4E65FF), Color(0xFF92EFFD))
                 )
             )
             .padding(24.dp),
