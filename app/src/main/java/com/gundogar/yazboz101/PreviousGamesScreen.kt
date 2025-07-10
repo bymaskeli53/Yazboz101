@@ -43,10 +43,10 @@ fun GameCard(game: YazbozItem) {
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(12.dp)
     ) {
-        Text("Oyun ID: ${game.id}", fontSize = 16.sp, color = MaterialTheme.colorScheme.primary)
+        Text(text = formatDateTime(game.createdAt), fontSize = 16.sp, color = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(8.dp))
 
-        val sortedPlayers = game.players.sortedByDescending { it.scores.sum() }
+        val sortedPlayers = game.players.sortedBy { it.scores.sum() }
 
         sortedPlayers.forEachIndexed { index, player ->
             Text(

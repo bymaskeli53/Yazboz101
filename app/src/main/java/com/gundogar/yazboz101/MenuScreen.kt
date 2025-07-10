@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit, onNavigateToPreviousGames: () -> Unit) {
+fun MenuScreen(onNavigateToYazboz: (List<Player>) -> Unit, onNavigateToPreviousGames: () -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
     val isimler = remember { mutableStateListOf("", "", "", "") }
     val context = LocalContext.current
@@ -55,7 +55,8 @@ fun MenuScreen(onNavigateToYazboz: (String, String, String, String) -> Unit, onN
             confirmButton = {
                 Button(onClick = {
                     if (isimler.all { it.isNotBlank() }) {
-                        onNavigateToYazboz(isimler[0], isimler[1], isimler[2], isimler[3])
+                        val players = isimler.map { Player(name = it, scores = listOf(0, 0, 0, 0)) }
+                        onNavigateToYazboz(players)
                         showDialog = false
                     } else {
                         Toast.makeText(

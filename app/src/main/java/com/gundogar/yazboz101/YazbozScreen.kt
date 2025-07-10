@@ -54,32 +54,21 @@ import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
 fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
     gameViewModel: GameViewModel = hiltViewModel(),
-    s1: String,
-    s2: String,
-    s3: String,
-    s4: String,
+    players: List<Player>,
 ) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-
-    val scores = remember { mutableStateListOf<MutableList<Int>>() }
-
-    Scaffold(
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-
         ) {
             YazbozScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 scores = state.scores,
-                s1 = s1,
-                s2 = s2,
-                s3 = s3,
-                s4 = s4
+                players = players
             )
 
             FloatingActionButton(
@@ -99,13 +88,11 @@ fun YazbozScreen(
                     .width(60.dp)
                     .height(60.dp)
                     .clickable {
-                        val players = listOf(
-                            Player(s1, state.scores.map { it[0] }),
-                            Player(s2, state.scores.map { it[1] }),
-                            Player(s3, state.scores.map { it[2] }),
-                            Player(s4, state.scores.map { it[3] })
-                        )
-                        viewModel.onEvent(YazbozUiEvent.SaveGame(players))
+                        // Oyuncuların skorlarını güncelle
+                        val updatedPlayers = players.mapIndexed { index, player ->
+                            player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
+                        }
+                        viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
                     },
                 tint = androidx.compose.ui.graphics.Color.Black,
                 contentDescription = null
@@ -123,7 +110,9 @@ fun YazbozScreen(
 
     if (state.showScoreDialog) {
         ScorePenaltyDialog(
+            players = players,
             title = "Kalan Puan Ekle",
+            playerCount = players.size,
             onDismiss = { viewModel.onEvent(YazbozUiEvent.CloseSheet) },
             onConfirm = { viewModel.onEvent(YazbozUiEvent.AddScores(it)) }
         )
@@ -131,7 +120,9 @@ fun YazbozScreen(
 
     if (state.showPenaltyDialog) {
         ScorePenaltyDialog(
+            players = players,
             title = "Siler Puan Ekle",
+            playerCount = players.size,
             onDismiss = { viewModel.onEvent(YazbozUiEvent.CloseSheet) },
             onConfirm = { viewModel.onEvent(YazbozUiEvent.AddPenalties(it)) }
         )
@@ -142,13 +133,8 @@ fun YazbozScreen(
 fun YazbozScreenContent(
     modifier: Modifier = Modifier,
     scores: List<List<Int>>,
-    s1: String,
-    s2: String,
-    s3: String,
-    s4: String,
+    players: List<Player>,
 ) {
-
-    val list = listOf<String>(s1, s2, s3, s4)
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -170,49 +156,56 @@ fun YazbozScreenContent(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            repeat(4) { playerIndex ->
+            players.forEachIndexed { playerIndex, player ->
                 Column(
                     modifier = Modifier
-                        .weight(0.25f)
+                        .weight(1f)
                         .fillMaxHeight()
                 ) {
-
                     Text(
-                        text = list.get(playerIndex),
+                        text = player.name,
                         color = androidx.compose.ui.graphics.Color.Black
                     )
 
                     HorizontalDivider()
+
                     LazyColumn(modifier = Modifier.weight(1f)) {
                         items(scores) { round ->
                             Text(
-                                text = round[playerIndex].toString(),
+                                text = round.getOrNull(playerIndex)?.toString() ?: "-",
                                 fontSize = 18.sp,
                                 color = androidx.compose.ui.graphics.Color.Black,
                                 modifier = Modifier.padding(4.dp)
                             )
                         }
                     }
+
                     Text(
-                        text = "Toplam: ${scores.sumOf { it[playerIndex] }}",
+                        text = "Toplam: ${scores.sumOf { it.getOrNull(playerIndex) ?: 0 }}",
                         fontSize = 18.sp,
                         color = androidx.compose.ui.graphics.Color.Black,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
-                if (playerIndex < 3) VerticalDivider()
+
+                if (playerIndex < players.lastIndex) {
+                    VerticalDivider()
+                }
             }
         }
     }
 }
 
+
 @Composable
 fun ScorePenaltyDialog(
+    players: List<Player>,
     title: String,
+    playerCount: Int,
     onDismiss: () -> Unit,
     onConfirm: (List<Int>) -> Unit
 ) {
-    var inputValues by remember { mutableStateOf(List(4) { TextFieldValue("") }) }
+    var inputValues by remember { mutableStateOf(List(playerCount) { TextFieldValue("") }) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -224,12 +217,11 @@ fun ScorePenaltyDialog(
                         value = value,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         onValueChange = { newValue ->
-                            val filteredText =
-                                newValue.text.filter { it.isDigit() }
+                            val filteredText = newValue.text.filter { it.isDigit() }
                             inputValues = inputValues.toMutableList()
                                 .also { it[index] = newValue.copy(text = filteredText) }
                         },
-                        label = { Text("Oyuncu ${index + 1}") },
+                        label = { Text(players[index].name) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
@@ -253,4 +245,5 @@ fun ScorePenaltyDialog(
         }
     )
 }
+
 

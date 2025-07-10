@@ -8,7 +8,7 @@ sealed class Screen {
     object MenuScreen : Screen()
 
     @Serializable
-    data class YazbozScreen(val player: Player) : Screen()
+    data class YazbozScreen(val players: List<Player>) : Screen()
 
     @Serializable
     object PreviousGamesScreen : Screen()
