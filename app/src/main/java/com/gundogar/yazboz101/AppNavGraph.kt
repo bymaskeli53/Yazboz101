@@ -35,7 +35,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
             )
         ) { backStackEntry ->
             val args = backStackEntry.toRoute<Screen.YazbozScreen>().players
-            YazbozScreen(players = args)
+            YazbozScreen(players = args, navController = navController)
         }
 
         composable<Screen.PreviousGamesScreen>{

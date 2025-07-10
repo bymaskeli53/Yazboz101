@@ -43,10 +43,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +57,7 @@ fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
     gameViewModel: GameViewModel = hiltViewModel(),
     players: List<Player>,
+    navController: NavHostController
 ) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
@@ -71,10 +74,21 @@ fun YazbozScreen(
                 players = players
             )
 
+            Button(onClick = {
+                val updatedPlayers = players.mapIndexed { index, player ->
+                    player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
+                }
+                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
+                navController.popBackStack()
+
+            }, modifier = Modifier.align(Alignment.TopEnd)) {
+                Text(text = "Oyunu bitir")
+            }
+
             FloatingActionButton(
                 onClick = { viewModel.onEvent(YazbozUiEvent.OpenSheet) },
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.BottomEnd)
                     .padding(8.dp),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -89,15 +103,13 @@ fun YazbozScreen(
                     .height(60.dp)
                     .clickable {
                         // Oyuncuların skorlarını güncelle
-                        val updatedPlayers = players.mapIndexed { index, player ->
-                            player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
-                        }
-                        viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
+                     shareImageWithText(context)
                     },
                 tint = androidx.compose.ui.graphics.Color.Black,
                 contentDescription = null
             )
         }
+
     }
 
     if (state.isSheetOpen) {
@@ -160,10 +172,14 @@ fun YazbozScreenContent(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
+                        .fillMaxHeight(0.92f)
+
                 ) {
                     Text(
                         text = player.name,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         color = androidx.compose.ui.graphics.Color.Black
                     )
 
@@ -189,7 +205,7 @@ fun YazbozScreenContent(
                 }
 
                 if (playerIndex < players.lastIndex) {
-                    VerticalDivider()
+                    VerticalDivider(modifier = Modifier.fillMaxHeight(0.92f))
                 }
             }
         }
