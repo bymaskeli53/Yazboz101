@@ -20,13 +20,11 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
             try {
                 dao.insertGame(YazbozItem(players = players))
                 Log.e("YazbozViewModel", "Oyun kaydedildi: $players")
-                // Gerekirse state güncellenebilir
             } catch (e: Exception) {
-                // Hata yakalama veya snackbar gösterme eklenebilir
                 e.printStackTrace()
             }
         }
-         }
+    }
 
     fun onEvent(event: YazbozUiEvent) {
         when (event) {
@@ -52,7 +50,6 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
 
             is YazbozUiEvent.SaveGame -> saveGame(players = event.players)
         }
-
 
     }
 }

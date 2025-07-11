@@ -37,7 +37,7 @@ fun MenuScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF4E65FF), Color(0xFF92EFFD))
+                    listOf(Color(0xFFC33764), Color(0xFF1D2671))
                 )
             )
             .padding(24.dp),
@@ -60,7 +60,7 @@ fun MenuScreen(
                 text = "YAZBOZ 101",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2C2C2C)
+                    color = Color(0xFFCFECEC)
                 )
             )
 

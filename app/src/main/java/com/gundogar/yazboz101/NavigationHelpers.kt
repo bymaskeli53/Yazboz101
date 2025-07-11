@@ -9,8 +9,6 @@ import kotlinx.serialization.json.Json
 
 
 object NavigationHelpers {
-
-    // this will serialize the List<Object>
     inline fun <reified T : Parcelable> parcelableListType(
         isNullableAllowed: Boolean = false,
         json: Json = Json,
@@ -33,7 +31,6 @@ object NavigationHelpers {
         }
     }
 
-    // this will serialize the Object
     inline fun <reified T : Parcelable> parcelableType(
         isNullableAllowed: Boolean = false,
         json: Json = Json,
