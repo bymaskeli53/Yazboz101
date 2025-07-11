@@ -1,8 +1,9 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.util
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.gundogar.yazboz101.data.Player
 
 class PlayerListConverter {
 

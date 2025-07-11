@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui
 
 import android.os.Build
 import android.os.Bundle

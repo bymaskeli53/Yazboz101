@@ -1,5 +1,6 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui
 
+import com.gundogar.yazboz101.data.Player
 import kotlinx.serialization.Serializable
 
 @Serializable

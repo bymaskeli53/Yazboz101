@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -8,6 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.gundogar.yazboz101.data.Player
+import com.gundogar.yazboz101.ui.screens.yazboz.YazbozScreen
+import com.gundogar.yazboz101.ui.screens.menu.MenuScreen
+import com.gundogar.yazboz101.ui.screens.previous.PreviousGamesScreen
 import kotlin.reflect.typeOf
 
 @Composable
@@ -22,7 +26,12 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
             MenuScreen(onNavigateToYazboz = { isimler ->
                 // val oyuncularJson = Uri.encode(Json.encodeToString(oyuncular))
                 // navController.navigate("${Screen.YazbozScreen::class.qualifiedName}?oyuncular=$oyuncularJson")
-                navController.navigate(Screen.YazbozScreen(players = isimler.map { Player(it.name, it.scores) }))
+                navController.navigate(Screen.YazbozScreen(players = isimler.map {
+                    Player(
+                        it.name,
+                        it.scores
+                    )
+                }))
             },onNavigateToPreviousGames = {
                 navController.navigate(Screen.PreviousGamesScreen)
 

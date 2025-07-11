@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

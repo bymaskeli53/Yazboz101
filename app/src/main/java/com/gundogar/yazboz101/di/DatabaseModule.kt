@@ -1,7 +1,9 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.di
 
 import android.content.Context
 import androidx.room.Room
+import com.gundogar.yazboz101.data.AppDatabase
+import com.gundogar.yazboz101.data.YazbozDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.yazboz
 
 data class YazbozUiState(
     val scores: List<List<Int>> = emptyList(),

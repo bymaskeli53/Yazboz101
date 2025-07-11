@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.data
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.util
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

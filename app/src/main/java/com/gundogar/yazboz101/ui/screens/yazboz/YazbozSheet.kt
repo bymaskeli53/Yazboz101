@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.yazboz
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

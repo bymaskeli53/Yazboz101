@@ -1,4 +1,6 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.yazboz
+
+import com.gundogar.yazboz101.data.Player
 
 sealed class YazbozUiEvent {
     object OpenSheet : YazbozUiEvent()

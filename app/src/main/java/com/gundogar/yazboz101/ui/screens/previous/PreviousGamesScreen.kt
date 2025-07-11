@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.previous
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gundogar.yazboz101.data.YazbozItem
+import com.gundogar.yazboz101.data.formatDateTime
 
 @Composable
 fun PreviousGamesScreen(viewModel: PreviousGamesViewModel = hiltViewModel()) {

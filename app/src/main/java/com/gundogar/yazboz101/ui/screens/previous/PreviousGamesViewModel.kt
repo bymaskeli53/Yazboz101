@@ -1,7 +1,9 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.previous
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gundogar.yazboz101.data.YazbozDao
+import com.gundogar.yazboz101.data.YazbozItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

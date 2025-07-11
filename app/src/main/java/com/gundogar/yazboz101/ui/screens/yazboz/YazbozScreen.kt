@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.ui.screens.yazboz
 
 
 import android.widget.Toast
@@ -34,7 +34,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,13 +49,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gundogar.yazboz101.data.Player
+import com.gundogar.yazboz101.util.shareImageWithText
 import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
-    gameViewModel: GameViewModel = hiltViewModel(),
     players: List<Player>,
     navController: NavHostController
 ) {

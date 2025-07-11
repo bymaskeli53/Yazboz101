@@ -1,4 +1,4 @@
-package com.gundogar.yazboz101
+package com.gundogar.yazboz101.util
 
 import android.content.ActivityNotFoundException
 import android.content.Context
