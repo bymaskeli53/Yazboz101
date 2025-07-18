@@ -22,7 +22,6 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
         viewModelScope.launch {
             try {
                 dao.insertGame(YazbozItem(players = players))
-                Log.e("YazbozViewModel", "Oyun kaydedildi: $players")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -32,24 +31,36 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
     fun onEvent(event: YazbozUiEvent) {
         when (event) {
             is YazbozUiEvent.OpenSheet -> _uiState.update { it.copy(isSheetOpen = true) }
-            is YazbozUiEvent.CloseSheet -> _uiState.update { it.copy(isSheetOpen = false) }
+            is YazbozUiEvent.CloseSheet -> _uiState.update {
+                it.copy(
+                    isSheetOpen = false,
+                    showScoreDialog = false,
+                    showPenaltyDialog = false
+                )
+            }
+
             is YazbozUiEvent.ShowScoreDialog -> _uiState.update {
                 it.copy(showScoreDialog = true, isSheetOpen = false)
             }
+
             is YazbozUiEvent.ShowPenaltyDialog -> _uiState.update {
                 it.copy(showPenaltyDialog = true, isSheetOpen = false)
             }
+
             is YazbozUiEvent.AddScores -> _uiState.update {
                 it.copy(
                     scores = it.scores + listOf(event.scores),
                     showScoreDialog = false
                 )
             }
+
             is YazbozUiEvent.AddPenalties -> _uiState.update {
                 val penalties = event.penalties.map { -it }
                 it.copy(scores = it.scores + listOf(penalties), showPenaltyDialog = false)
             }
-            YazbozUiEvent.Share -> { /* handled in View via callback */ }
+
+            YazbozUiEvent.Share -> {
+            }
 
             is YazbozUiEvent.SaveGame -> saveGame(players = event.players)
         }

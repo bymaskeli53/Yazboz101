@@ -200,7 +200,7 @@ fun YazbozScreenContent(
 
                     Text(
                         text = "Toplam: ${scores.sumOf { it.getOrNull(playerIndex) ?: 0 }}",
-                        fontSize = 18.sp,
+                        fontSize = 13.sp,
                         color = androidx.compose.ui.graphics.Color.Black,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )

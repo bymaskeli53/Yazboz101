@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.R
+import com.gundogar.yazboz101.ui.PlayerNameDialog
 
 @Composable
 fun MenuScreen(
@@ -77,46 +78,12 @@ fun MenuScreen(
         }
 
         if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text("Oyuncu İsimlerini Girin") },
-                text = {
-                    Column {
-                        isimler.forEachIndexed { index, value ->
-                            OutlinedTextField(
-                                value = value,
-                                onValueChange = { isimler[index] = it },
-                                label = { Text("Oyuncu ${index + 1}") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            )
-                        }
-                    }
-                },
-                confirmButton = {
-                    Button(onClick = {
-                        if (isimler.all { it.isNotBlank() }) {
-                            val players = isimler.map { Player(name = it, scores = listOf(0, 0, 0, 0)) }
-                            onNavigateToYazboz(players)
-                            showDialog = false
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Lütfen tüm oyuncu isimlerini girin.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }) {
-                        Text("Başla")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDialog = false }) {
-                        Text("İptal")
-                    }
-                },
-                shape = RoundedCornerShape(16.dp)
+            PlayerNameDialog(
+                isimler = isimler,
+                onDismiss = { showDialog = false },
+                onConfirm = { players ->
+                    onNavigateToYazboz(players)
+                }
             )
         }
     }
