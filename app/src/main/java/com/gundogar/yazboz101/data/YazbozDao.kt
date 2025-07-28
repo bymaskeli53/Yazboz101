@@ -1,6 +1,7 @@
 package com.gundogar.yazboz101.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,4 +15,7 @@ interface YazbozDao {
 
     @Query("SELECT * FROM yazboz_item ORDER BY id DESC")
     fun getAllGames(): Flow<List<YazbozItem>>
+
+    @Delete
+    suspend fun deleteGame(game: YazbozItem)
 }

@@ -29,4 +29,11 @@ class PreviousGamesViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteGame(game: YazbozItem) {
+        viewModelScope.launch {
+            dao.deleteGame(game)
+        }
+    }
 }
+
