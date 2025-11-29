@@ -25,13 +25,20 @@ Yazboz 101 is a modern Android application for Okey Players. The app provides a 
 
 ---
 
+## Download
+
+<a href="https://play.google.com/store/apps/details?id=com.gundogar.yazboz101">
+  <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"/>
+</a>
+
 ## ✨ Features
 
 ### 🎯 Core Functionality
 
 - **Fast and easy**
 - **Calculating your scores**
-- **Save your games**
+- **Save your games without internet connection**
+- **Share game results with friends**
 
 ---
 
