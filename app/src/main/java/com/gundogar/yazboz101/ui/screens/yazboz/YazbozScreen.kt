@@ -3,7 +3,6 @@ package com.gundogar.yazboz101.ui.screens.yazboz
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,20 +12,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,10 +46,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +66,6 @@ import androidx.navigation.NavHostController
 import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.util.shareImageWithText
-import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,16 +97,92 @@ fun YazbozScreen(
                 gameMode = gameMode
             )
 
-            Button(onClick = {
-                val updatedPlayers = players.mapIndexed { index, player ->
-                    player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
-                }
-                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode, gameId))
-                navController.popBackStack()
-                Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
+            // Üst butonların arkasına derinlik veren koyu -> şeffaf degrade.
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color(0x33000000), Color.Transparent)
+                        )
+                    )
+            )
 
-            }, modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 8.dp)) {
-                Text(text = "Oyunu bitir")
+            // Paylaş butonu (sol üst)
+            IconButton(
+                onClick = { shareImageWithText(context) },
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+                    .size(44.dp)
+                    .background(Color(0xFF384247), RoundedCornerShape(12.dp))
+            ) {
+                Icon(
+                    Icons.Filled.Share,
+                    contentDescription = "Paylaş",
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            // Oyunu bitir butonu (sağ üst)
+            val finishShape = RoundedCornerShape(50)
+            Button(
+                onClick = {
+                    val updatedPlayers = players.mapIndexed { index, player ->
+                        player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
+                    }
+                    viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode, gameId))
+                    navController.popBackStack()
+                    Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .height(46.dp)
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = finishShape,
+                        spotColor = Color(0xFFD4B100),
+                        ambientColor = Color(0xFFD4B100)
+                    )
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(Color(0xFFF2D04B), Color(0xFFD4B100))
+                        ),
+                        shape = finishShape
+                    ),
+                shape = finishShape,
+                contentPadding = PaddingValues(start = 6.dp, end = 18.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                elevation = null
+            ) {
+                // Beyaz halka içinde onay ikonu
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .background(Color.White.copy(alpha = 0.25f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Oyunu Bitir",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.5.sp
+                )
             }
 
             FloatingActionButton(
@@ -103,24 +190,11 @@ fun YazbozScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(8.dp),
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = Color(0xFF384247),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Outlined.Add, contentDescription = "Ekle")
+                Icon(Icons.Outlined.Add, contentDescription = "Ekle", tint = Color(0xFFD4B100))
             }
-
-            Icon(
-                Icons.Filled.Share,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .width(60.dp)
-                    .height(60.dp)
-                    .clickable {
-                        // Oyuncuların skorlarını güncelle
-                     shareImageWithText(context)
-                    },
-                tint = androidx.compose.ui.graphics.Color.Black,
-                contentDescription = null
-            )
         }
 
     }
@@ -161,28 +235,48 @@ fun YazbozScreenContent(
     players: List<Player>,
     gameMode: GameMode = GameMode.INDIVIDUAL,
 ) {
+    val paperColor = Color(0xFFFDF6E3)
+    val ruleColor = Color(0xFFE0D8C8)
+    val slate = Color(0xFF384247)
+    val gold = Color(0xFFD4B100)
+
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .background(LightGrayishPaper)
-            .padding(16.dp)
+            .background(paperColor)
+            // Üstte, üzerine binen Paylaş / Oyunu bitir butonları için boşluk bırak.
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 64.dp)
     ) {
+        // Başlık
         Text(
             text = "YAZBOZ",
             fontSize = 30.sp,
-            color = androidx.compose.ui.graphics.Color.Black,
-            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Black,
+            letterSpacing = 6.sp,
+            color = Color.Black,
             modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        // İnce altın çizgi
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 4.dp)
+                .width(80.dp)
+                .height(2.dp)
+                .background(gold)
         )
 
         Text(
             text = if (gameMode == GameMode.TEAM) "Takım Oyunu" else "Bireysel Oyun",
             fontSize = 14.sp,
-            color = androidx.compose.ui.graphics.Color.DarkGray,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            color = Color.DarkGray,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             modifier = Modifier
@@ -193,36 +287,95 @@ fun YazbozScreenContent(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight(0.92f)
-
+                        .fillMaxHeight(0.92f),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = player.name,
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = androidx.compose.ui.graphics.Color.Black
-                    )
+                    // İsim çipi
+                    Box(
+                        modifier = Modifier
+                            .background(slate, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = player.name,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.White
+                        )
+                    }
 
-                    HorizontalDivider()
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    LazyColumn(modifier = Modifier.weight(1f)) {
-                        items(scores) { round ->
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .drawBehind {
+                                // Silik defter çizgileri
+                                val spacing = 32.dp.toPx()
+                                val stroke = 1.dp.toPx()
+                                var y = spacing
+                                while (y < size.height) {
+                                    drawLine(
+                                        color = ruleColor,
+                                        start = Offset(0f, y),
+                                        end = Offset(size.width, y),
+                                        strokeWidth = stroke
+                                    )
+                                    y += spacing
+                                }
+                            }
+                    ) {
+                        itemsIndexed(scores) { rowIndex, round ->
+                            val value = round.getOrNull(playerIndex)
+                            val rowBackground =
+                                if (rowIndex % 2 == 0) Color(0x08000000) else Color.Transparent
+                            val scoreColor = when {
+                                value == null -> Color.Black
+                                value < 0 -> Color(0xFFE53935)
+                                value > 0 -> Color(0xFF2E7D32)
+                                else -> Color.Black
+                            }
                             Text(
-                                text = round.getOrNull(playerIndex)?.toString() ?: "-",
-                                fontSize = 18.sp,
-                                color = androidx.compose.ui.graphics.Color.Black,
-                                modifier = Modifier.padding(4.dp)
+                                text = value?.toString() ?: "-",
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 16.sp,
+                                color = scoreColor,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(rowBackground)
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
                     }
 
-                    Text(
-                        text = "Toplam: ${scores.sumOf { it.getOrNull(playerIndex) ?: 0 }}",
-                        fontSize = 13.sp,
-                        color = androidx.compose.ui.graphics.Color.Black,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    // Toplam satırı
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                slate,
+                                RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Toplam: ",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "${scores.sumOf { it.getOrNull(playerIndex) ?: 0 }}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
 
                 if (playerIndex < players.lastIndex) {
