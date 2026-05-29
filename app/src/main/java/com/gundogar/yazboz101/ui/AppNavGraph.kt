@@ -47,13 +47,21 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
             YazbozScreen(
                 players = route.players,
                 gameMode = route.gameMode,
+                gameId = route.gameId,
                 navController = navController
             )
         }
 
         composable<Screen.PreviousGamesScreen>{
-            PreviousGamesScreen()
-
+            PreviousGamesScreen(onResumeGame = { game ->
+                navController.navigate(
+                    Screen.YazbozScreen(
+                        players = game.players,
+                        gameMode = game.gameMode,
+                        gameId = game.id
+                    )
+                )
+            })
         }
     }
 }

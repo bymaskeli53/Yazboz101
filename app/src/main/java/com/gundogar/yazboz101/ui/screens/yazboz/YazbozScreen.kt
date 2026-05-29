@@ -34,6 +34,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,11 +62,17 @@ fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
     players: List<Player>,
     gameMode: GameMode = GameMode.INDIVIDUAL,
+    gameId: Int = 0,
     navController: NavHostController
 ) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Kayıtlı bir oyun açıldıysa skorlarını geri yükle (yeni oyunda etkisizdir).
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(YazbozUiEvent.LoadGame(players))
+    }
 
     Scaffold { paddingValues ->
         Box(
@@ -83,7 +90,7 @@ fun YazbozScreen(
                 val updatedPlayers = players.mapIndexed { index, player ->
                     player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
                 }
-                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode))
+                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode, gameId))
                 navController.popBackStack()
                 Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
 

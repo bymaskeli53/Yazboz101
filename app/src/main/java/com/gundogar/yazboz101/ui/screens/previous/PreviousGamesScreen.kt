@@ -59,7 +59,10 @@ private val LoserTint = Color(0xFFE57373).copy(alpha = 0.18f)
 private val LoserText = Color(0xFFFF8A80)
 
 @Composable
-fun PreviousGamesScreen(viewModel: PreviousGamesViewModel = hiltViewModel()) {
+fun PreviousGamesScreen(
+    viewModel: PreviousGamesViewModel = hiltViewModel(),
+    onResumeGame: (YazbozItem) -> Unit = {}
+) {
     val games by viewModel.games.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
@@ -82,6 +85,7 @@ fun PreviousGamesScreen(viewModel: PreviousGamesViewModel = hiltViewModel()) {
                     GameCard(
                         game = game,
                         modifier = Modifier.animateItem(),
+                        onClick = { onResumeGame(game) },
                         onClickDelete = {
                             gameToDelete = it
                             showDialog = true
@@ -108,6 +112,7 @@ fun PreviousGamesScreen(viewModel: PreviousGamesViewModel = hiltViewModel()) {
 fun GameCard(
     game: YazbozItem,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
     onClickDelete: (YazbozItem) -> Unit
 ) {
     // Görünürken yumuşak bir fade-in.
@@ -125,6 +130,7 @@ fun GameCard(
     val roundCount = game.players.firstOrNull()?.scores?.size ?: 0
 
     Surface(
+        onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         color = CardBackground,
         shadowElevation = 8.dp,

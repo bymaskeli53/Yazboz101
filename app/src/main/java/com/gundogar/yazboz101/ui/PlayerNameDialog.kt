@@ -155,7 +155,7 @@ fun PlayerNameDialog(
                         onClick = {
                             if (names.all { it.isNotBlank() }) {
                                 val players = names.map {
-                                    Player(name = it.trim(), scores = listOf(0, 0, 0, 0))
+                                    Player(name = it.trim(), scores = emptyList())
                                 }
                                 onConfirm(players, gameMode)
                                 onDismiss()
