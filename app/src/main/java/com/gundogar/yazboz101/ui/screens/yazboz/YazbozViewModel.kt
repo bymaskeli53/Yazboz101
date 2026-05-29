@@ -3,6 +3,7 @@ package com.gundogar.yazboz101.ui.screens.yazboz
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.data.YazbozDao
 import com.gundogar.yazboz101.data.YazbozItem
@@ -18,10 +19,10 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
     private val _uiState = MutableStateFlow(YazbozUiState())
     val uiState: StateFlow<YazbozUiState> = _uiState
 
-    private fun saveGame(players: List<Player>) {
+    private fun saveGame(players: List<Player>, gameMode: GameMode) {
         viewModelScope.launch {
             try {
-                dao.insertGame(YazbozItem(players = players))
+                dao.insertGame(YazbozItem(players = players, gameMode = gameMode))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -62,7 +63,7 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
             YazbozUiEvent.Share -> {
             }
 
-            is YazbozUiEvent.SaveGame -> saveGame(players = event.players)
+            is YazbozUiEvent.SaveGame -> saveGame(players = event.players, gameMode = event.gameMode)
         }
 
     }

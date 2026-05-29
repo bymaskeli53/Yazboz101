@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.util.shareImageWithText
 import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
@@ -59,6 +60,7 @@ import com.gundogar.yazboz101.ui.theme.LightGrayishPaper
 fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
     players: List<Player>,
+    gameMode: GameMode = GameMode.INDIVIDUAL,
     navController: NavHostController
 ) {
     val context = LocalContext.current
@@ -73,14 +75,15 @@ fun YazbozScreen(
             YazbozScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 scores = state.scores,
-                players = players
+                players = players,
+                gameMode = gameMode
             )
 
             Button(onClick = {
                 val updatedPlayers = players.mapIndexed { index, player ->
                     player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
                 }
-                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers))
+                viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode))
                 navController.popBackStack()
                 Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
 
@@ -149,6 +152,7 @@ fun YazbozScreenContent(
     modifier: Modifier = Modifier,
     scores: List<List<Int>>,
     players: List<Player>,
+    gameMode: GameMode = GameMode.INDIVIDUAL,
 ) {
     Column(
         modifier = modifier
@@ -161,6 +165,13 @@ fun YazbozScreenContent(
             fontSize = 30.sp,
             color = androidx.compose.ui.graphics.Color.Black,
             fontStyle = FontStyle.Italic,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Text(
+            text = if (gameMode == GameMode.TEAM) "Takım Oyunu" else "Bireysel Oyun",
+            fontSize = 14.sp,
+            color = androidx.compose.ui.graphics.Color.DarkGray,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 

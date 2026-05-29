@@ -2,12 +2,10 @@ package com.gundogar.yazboz101.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,15 +16,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerNameDialog(
-    isimler: MutableList<String>,
     onDismiss: () -> Unit,
-    onConfirm: (List<Player>) -> Unit
+    onConfirm: (players: List<Player>, gameMode: GameMode) -> Unit
 ) {
     val context = LocalContext.current
+
+    var gameMode by remember { mutableStateOf(GameMode.INDIVIDUAL) }
+    // İki mod için isimler ayrı tutulur, böylece sekmeler arası geçişte girilenler kaybolmaz.
+    val individualNames = remember { mutableStateListOf("", "", "", "") }
+    val teamNames = remember { mutableStateListOf("", "") }
+
+    val names = if (gameMode == GameMode.TEAM) teamNames else individualNames
+    val isTeam = gameMode == GameMode.TEAM
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -48,14 +55,14 @@ fun PlayerNameDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Person, // veya başka bir ikon
+                        imageVector = Icons.Outlined.Person,
                         contentDescription = null,
                         tint = Color(0xFFD4B100),
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "Oyuncu İsimlerini Girin",
+                        text = if (isTeam) "Takım İsimlerini Girin" else "Oyuncu İsimlerini Girin",
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF2D2D2D)
@@ -63,16 +70,45 @@ fun PlayerNameDialog(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Oyun modu seçimi
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    SegmentedButton(
+                        selected = !isTeam,
+                        onClick = { gameMode = GameMode.INDIVIDUAL },
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = Color(0xFFD4B100),
+                            activeContentColor = Color.White
+                        )
+                    ) {
+                        Text("Bireysel")
+                    }
+                    SegmentedButton(
+                        selected = isTeam,
+                        onClick = { gameMode = GameMode.TEAM },
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = Color(0xFFD4B100),
+                            activeContentColor = Color.White
+                        )
+                    ) {
+                        Text("Takım")
+                    }
+
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // İsim alanları
-                isimler.forEachIndexed { index, value ->
+                names.forEachIndexed { index, value ->
                     OutlinedTextField(
                         value = value,
-                        onValueChange = { isimler[index] = it },
+                        onValueChange = { names[index] = it },
                         label = {
                             Text(
-                                "Oyuncu ${index + 1}",
+                                if (isTeam) "Takım ${index + 1}" else "Oyuncu ${index + 1}",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         },
@@ -117,16 +153,17 @@ fun PlayerNameDialog(
 
                     Button(
                         onClick = {
-                            if (isimler.all { it.isNotBlank() }) {
-                                val players = isimler.map {
-                                    Player(name = it, scores = listOf(0, 0, 0, 0))
+                            if (names.all { it.isNotBlank() }) {
+                                val players = names.map {
+                                    Player(name = it.trim(), scores = listOf(0, 0, 0, 0))
                                 }
-                                onConfirm(players)
+                                onConfirm(players, gameMode)
                                 onDismiss()
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Lütfen tüm oyuncu isimlerini girin.",
+                                    if (isTeam) "Lütfen tüm takım isimlerini girin."
+                                    else "Lütfen tüm oyuncu isimlerini girin.",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -143,7 +180,7 @@ fun PlayerNameDialog(
                         )
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward, // veya başka bir ikon
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
                             contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )

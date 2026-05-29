@@ -9,6 +9,7 @@ import java.util.Locale
 @Entity(tableName = "yazboz_item")
 data class YazbozItem(
     val players: List<Player>,
+    val gameMode: GameMode = GameMode.INDIVIDUAL,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val createdAt: LocalDateTime = LocalDateTime.now(),

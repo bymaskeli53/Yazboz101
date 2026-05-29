@@ -19,17 +19,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.R
 import com.gundogar.yazboz101.ui.PlayerNameDialog
 
 @Composable
 fun MenuScreen(
-    onNavigateToYazboz: (List<Player>) -> Unit,
+    onNavigateToYazboz: (List<Player>, GameMode) -> Unit,
     onNavigateToPreviousGames: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    val isimler = remember { mutableStateListOf("", "", "", "") }
     val context = LocalContext.current
 
     Box(
@@ -79,10 +79,9 @@ fun MenuScreen(
 
         if (showDialog) {
             PlayerNameDialog(
-                isimler = isimler,
                 onDismiss = { showDialog = false },
-                onConfirm = { players ->
-                    onNavigateToYazboz(players)
+                onConfirm = { players, gameMode ->
+                    onNavigateToYazboz(players, gameMode)
                 }
             )
         }

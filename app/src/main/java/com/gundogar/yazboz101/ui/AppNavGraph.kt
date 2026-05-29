@@ -23,7 +23,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
         ) {
 
             composable<Screen.MenuScreen> {
-            MenuScreen(onNavigateToYazboz = { isimler ->
+            MenuScreen(onNavigateToYazboz = { isimler, gameMode ->
                 // val oyuncularJson = Uri.encode(Json.encodeToString(oyuncular))
                 // navController.navigate("${Screen.YazbozScreen::class.qualifiedName}?oyuncular=$oyuncularJson")
                 navController.navigate(Screen.YazbozScreen(players = isimler.map {
@@ -31,7 +31,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
                         it.name,
                         it.scores
                     )
-                }))
+                }, gameMode = gameMode))
             },onNavigateToPreviousGames = {
                 navController.navigate(Screen.PreviousGamesScreen)
 
@@ -43,8 +43,12 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
                 typeOf<List<Player>>() to NavigationHelpers.parcelableListType<Player>(),
             )
         ) { backStackEntry ->
-            val args = backStackEntry.toRoute<Screen.YazbozScreen>().players
-            YazbozScreen(players = args, navController = navController)
+            val route = backStackEntry.toRoute<Screen.YazbozScreen>()
+            YazbozScreen(
+                players = route.players,
+                gameMode = route.gameMode,
+                navController = navController
+            )
         }
 
         composable<Screen.PreviousGamesScreen>{

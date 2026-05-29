@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.YazbozItem
 import com.gundogar.yazboz101.data.formatDateTime
 
@@ -101,11 +102,18 @@ fun GameCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = formatDateTime(game.createdAt),
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Column {
+                Text(
+                    text = formatDateTime(game.createdAt),
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = if (game.gameMode == GameMode.TEAM) "Takım Oyunu" else "Bireysel Oyun",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             IconButton(onClick = { onClickDelete(game) }) {
                 Icon(

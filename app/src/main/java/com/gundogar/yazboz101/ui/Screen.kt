@@ -1,5 +1,6 @@
 package com.gundogar.yazboz101.ui
 
+import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import kotlinx.serialization.Serializable
 
@@ -9,7 +10,10 @@ sealed class Screen {
     object MenuScreen : Screen()
 
     @Serializable
-    data class YazbozScreen(val players: List<Player>) : Screen()
+    data class YazbozScreen(
+        val players: List<Player>,
+        val gameMode: GameMode = GameMode.INDIVIDUAL
+    ) : Screen()
 
     @Serializable
     object PreviousGamesScreen : Screen()
