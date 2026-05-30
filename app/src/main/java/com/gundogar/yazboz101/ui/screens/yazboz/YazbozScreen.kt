@@ -82,7 +82,9 @@ fun YazbozScreen(
     // Navigasyonu bir sonraki frame'e ertele: önce dialog DOM'dan kalkar, sonra geçiş olur.
     LaunchedEffect(pendingWinner) {
         pendingWinner?.let { winners ->
-            navController.navigate(Screen.WinnerScreen(winners))
+            navController.navigate(Screen.WinnerScreen(winners)) {
+                popUpTo<Screen.YazbozScreen> { inclusive = true }
+            }
             pendingWinner = null
         }
     }
