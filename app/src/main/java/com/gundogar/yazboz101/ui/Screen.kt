@@ -20,5 +20,7 @@ sealed class Screen {
     @Serializable
     object PreviousGamesScreen : Screen()
 
+    @Serializable
+    data class WinnerScreen(val players: List<Player>) : Screen()
 
 }

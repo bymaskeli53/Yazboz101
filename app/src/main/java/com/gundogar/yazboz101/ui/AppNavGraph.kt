@@ -12,6 +12,7 @@ import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.ui.screens.yazboz.YazbozScreen
 import com.gundogar.yazboz101.ui.screens.menu.MenuScreen
 import com.gundogar.yazboz101.ui.screens.previous.PreviousGamesScreen
+import com.gundogar.yazboz101.ui.screens.winner.WinnerScreen
 import kotlin.reflect.typeOf
 
 @Composable
@@ -48,6 +49,16 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
                 gameId = route.gameId,
                 navController = navController
             )
+        }
+
+        composable<Screen.WinnerScreen>(
+            typeMap = mapOf(
+                typeOf<Player>() to NavigationHelpers.parcelableType<Player>(),
+                typeOf<List<Player>>() to NavigationHelpers.parcelableListType<Player>()
+            )
+        ) { backStackEntry ->
+            val players = backStackEntry.toRoute<Screen.WinnerScreen>().players
+            WinnerScreen(players = players, navController = navController)
         }
 
         composable<Screen.PreviousGamesScreen>{

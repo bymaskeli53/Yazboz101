@@ -82,6 +82,14 @@ class YazbozViewModel @Inject constructor(private val dao: YazbozDao) : ViewMode
             YazbozUiEvent.Share -> {
             }
 
+            is YazbozUiEvent.ShowFinishDialog -> _uiState.update {
+                it.copy(showFinishDialog = true)
+            }
+
+            is YazbozUiEvent.CloseFinishDialog -> _uiState.update {
+                it.copy(showFinishDialog = false)
+            }
+
             is YazbozUiEvent.LoadGame -> loadGame(event.players)
 
             is YazbozUiEvent.SaveGame -> saveGame(

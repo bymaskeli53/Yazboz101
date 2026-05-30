@@ -11,6 +11,8 @@ sealed class YazbozUiEvent {
     data class AddScores(val scores: List<Int>) : YazbozUiEvent()
     data class AddPenalties(val penalties: List<Int>) : YazbozUiEvent()
     object Share : YazbozUiEvent()
+    object ShowFinishDialog : YazbozUiEvent()
+    object CloseFinishDialog : YazbozUiEvent()
     data class LoadGame(val players: List<Player>) : YazbozUiEvent()
     data class SaveGame(
         val players: List<Player>,

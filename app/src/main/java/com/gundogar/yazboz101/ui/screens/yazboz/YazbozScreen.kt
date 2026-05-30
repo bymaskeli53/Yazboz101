@@ -1,7 +1,6 @@
 package com.gundogar.yazboz101.ui.screens.yazboz
 
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,17 +22,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +46,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -62,7 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
-import com.gundogar.yazboz101.util.shareImageWithText
+import com.gundogar.yazboz101.ui.Screen
 
 @Composable
 fun YazbozScreen(
@@ -72,12 +69,22 @@ fun YazbozScreen(
     gameId: Int = 0,
     navController: NavHostController
 ) {
-    val context = LocalContext.current
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Bitir'e basıldığında doldurulur; dialog kapandıktan SONRA WinnerScreen'e geçilir.
+    var pendingWinner by remember { mutableStateOf<List<Player>?>(null) }
 
     // Kayıtlı bir oyun açıldıysa skorlarını geri yükle (yeni oyunda etkisizdir).
     LaunchedEffect(Unit) {
         viewModel.onEvent(YazbozUiEvent.LoadGame(players))
+    }
+
+    // Navigasyonu bir sonraki frame'e ertele: önce dialog DOM'dan kalkar, sonra geçiş olur.
+    LaunchedEffect(pendingWinner) {
+        pendingWinner?.let { winners ->
+            navController.navigate(Screen.WinnerScreen(winners))
+            pendingWinner = null
+        }
     }
 
     Scaffold { paddingValues ->
@@ -105,35 +112,10 @@ fun YazbozScreen(
                     )
             )
 
-            // Paylaş butonu (sol üst)
-            IconButton(
-                // TODO: Pass actual game results to share function
-                onClick = { shareImageWithText(context) },
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-                    .size(44.dp)
-                    .background(Color(0xFF384247), RoundedCornerShape(12.dp))
-            ) {
-                Icon(
-                    Icons.Filled.Share,
-                    contentDescription = "Paylaş",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-
             // Oyunu bitir butonu (sağ üst)
             val finishShape = RoundedCornerShape(50)
             Button(
-                onClick = {
-                    val updatedPlayers = players.mapIndexed { index, player ->
-                        player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
-                    }
-                    viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode, gameId))
-                    navController.popBackStack()
-                    Toast.makeText(context, "Oyun kaydedildi", Toast.LENGTH_SHORT).show()
-                },
+                onClick = { viewModel.onEvent(YazbozUiEvent.ShowFinishDialog) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)
@@ -220,6 +202,32 @@ fun YazbozScreen(
             playerCount = players.size,
             onDismiss = { viewModel.onEvent(YazbozUiEvent.CloseSheet) },
             onConfirm = { viewModel.onEvent(YazbozUiEvent.AddPenalties(it)) }
+        )
+    }
+
+    if (state.showFinishDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(YazbozUiEvent.CloseFinishDialog) },
+            title = { Text(text = "Oyunu Bitir") },
+            text = { Text(text = "Oyunu bitirmek istediğinizden emin misiniz?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    val updatedPlayers = players.mapIndexed { index, player ->
+                        player.copy(scores = state.scores.map { it.getOrNull(index) ?: 0 })
+                    }
+                    viewModel.onEvent(YazbozUiEvent.SaveGame(updatedPlayers, gameMode, gameId))
+                    // Önce dialog'u kapat, navigasyonu LaunchedEffect'e bırak.
+                    viewModel.onEvent(YazbozUiEvent.CloseFinishDialog)
+                    pendingWinner = updatedPlayers
+                }) {
+                    Text(text = "Bitir")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(YazbozUiEvent.CloseFinishDialog) }) {
+                    Text(text = "Devam Et")
+                }
+            }
         )
     }
 }

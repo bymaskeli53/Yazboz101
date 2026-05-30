@@ -4,5 +4,6 @@ data class YazbozUiState(
     val scores: List<List<Int>> = emptyList(),
     val isSheetOpen: Boolean = false,
     val showScoreDialog: Boolean = false,
-    val showPenaltyDialog: Boolean = false
+    val showPenaltyDialog: Boolean = false,
+    val showFinishDialog: Boolean = false
 )
