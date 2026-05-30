@@ -48,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.data.YazbozItem
-import com.gundogar.yazboz101.data.formatDateTime
+import com.gundogar.yazboz101.util.formatDateTime
 
 private val ScreenGradient = Brush.verticalGradient(
     listOf(Color(0xFFC33764), Color(0xFF1D2671))

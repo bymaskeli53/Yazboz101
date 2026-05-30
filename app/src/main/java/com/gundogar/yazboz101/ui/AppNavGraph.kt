@@ -23,16 +23,14 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues) {
         ) {
 
             composable<Screen.MenuScreen> {
-            MenuScreen(onNavigateToYazboz = { isimler, gameMode ->
-                // val oyuncularJson = Uri.encode(Json.encodeToString(oyuncular))
-                // navController.navigate("${Screen.YazbozScreen::class.qualifiedName}?oyuncular=$oyuncularJson")
-                navController.navigate(Screen.YazbozScreen(players = isimler.map {
+            MenuScreen(onNavigateToYazboz = { playerNames, gameMode ->
+                navController.navigate(Screen.YazbozScreen(players = playerNames.map {
                     Player(
                         it.name,
                         it.scores
                     )
                 }, gameMode = gameMode))
-            },onNavigateToPreviousGames = {
+            }, onNavigateToPreviousGames = {
                 navController.navigate(Screen.PreviousGamesScreen)
 
             })

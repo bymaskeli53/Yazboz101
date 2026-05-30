@@ -28,16 +28,13 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,7 +64,6 @@ import com.gundogar.yazboz101.data.GameMode
 import com.gundogar.yazboz101.data.Player
 import com.gundogar.yazboz101.util.shareImageWithText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YazbozScreen(
     viewModel: YazbozViewModel = hiltViewModel(),
@@ -77,7 +73,6 @@ fun YazbozScreen(
     navController: NavHostController
 ) {
     val context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Kayıtlı bir oyun açıldıysa skorlarını geri yükle (yeni oyunda etkisizdir).
@@ -112,6 +107,7 @@ fun YazbozScreen(
 
             // Paylaş butonu (sol üst)
             IconButton(
+                // TODO: Pass actual game results to share function
                 onClick = { shareImageWithText(context) },
                 modifier = Modifier
                     .align(Alignment.TopStart)

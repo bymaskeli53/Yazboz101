@@ -19,14 +19,8 @@ class PreviousGamesViewModel @Inject constructor(
     val games: StateFlow<List<YazbozItem>> = _games
 
     init {
-        getGames()
-    }
-
-    private fun getGames() {
         viewModelScope.launch {
-            dao.getAllGames().collect { items ->
-                _games.value = items
-            }
+            dao.getAllGames().collect { _games.value = it }
         }
     }
 

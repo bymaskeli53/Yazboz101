@@ -1,6 +1,5 @@
 package com.gundogar.yazboz101.ui.screens.yazboz
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gundogar.yazboz101.data.GameMode

@@ -37,5 +37,5 @@ object DatabaseModule {
             .build()
 
     @Provides
-    fun provideFavoriteDao(db: AppDatabase): YazbozDao = db.yazbozDao()
+    fun provideYazbozDao(db: AppDatabase): YazbozDao = db.yazbozDao()
 }
